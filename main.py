@@ -1,66 +1,65 @@
-import cv2
+import cv2 as cv
+import mediapipe as mp
 import numpy as np
+import os
+import handTrack as ht
 
-# Initialize the webcam
-cap = cv2.VideoCapture(0)
+folderPath = "assets"
+mylist = os.listdir(folderPath)
+print(mylist)
+overlayList = []
 
-# Define the upper and lower bounds for the color to be detected (e.g., green color)
-lower_bound = np.array([40, 100, 100])
-upper_bound = np.array([80, 255, 255])
+for imPath in mylist:
+    image = cv.imread(f"{folderPath}/{imPath}")
+    overlayList.append(image)
 
-# Initialize an empty canvas
-canvas = None
+print(len(overlayList))
+asset = overlayList[0]
 
-# Initialize previous x, y coordinates
-prev_x, prev_y = 0, 0
+drawColor = (255, 0, 255)
+
+cap = cv.VideoCapture(0)
+cap.set(3, 1280)
+cap.set(4, 720)
+
+detector = ht.handDetector(detectionCon=0.85)
 
 while True:
-    # Capture the frame from the webcam
-    ret, frame = cap.read()
-    if not ret:
-        break
+    success, img = cap.read()
+    img = cv.flip(img, 1)
 
-    # Flip the frame horizontally
-    frame = cv2.flip(frame, 1)
+    img = detector.findHands(img)
+    lmList = detector.findPosition(img, draw=False)
 
-    # Convert the frame to HSV color space
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    if len(lmList) != 0:
+        # print(lmList)
 
-    # Create a mask for the color detection
-    mask = cv2.inRange(hsv, lower_bound, upper_bound)
+        # Tip of index and middle fingers
+        x1, y1 = lmList[8][1:]
+        x2, y2 = lmList[12][1:]
 
-    # Find contours in the mask
-    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        fingers = detector.fingersUp()
+        # print(fingers)
 
-    # If a contour is found, get the coordinates
-    if contours and len(contours) > 0:
-        largest_contour = max(contours, key=cv2.contourArea)
-        x, y, w, h = cv2.boundingRect(largest_contour)
-        cx, cy = x + w // 2, y + h // 2
+        if fingers[1] and fingers[2]:
+            cv.rectangle(img, (x1, y1 - 25), (x2, y2 + 25), drawColor, cv.FILLED)
+            print("Selection Mode")
 
-        # Initialize the canvas if it's not already
-        if canvas is None:
-            canvas = np.zeros_like(frame)
+            if y1 < 125:
+                if 250 < x1 < 450:
+                    asset = overlayList[0]
+                elif 550 < x1 < 750:
+                    asset = overlayList[1]
+                elif 800 < x1 < 950:
+                    asset = overlayList[2]
+                elif 1050 < x1 < 1200:
+                    asset = overlayList[3]
 
-        # If the previous coordinates are not (0, 0), draw a line
-        if prev_x != 0 and prev_y != 0:
-            canvas = cv2.line(canvas, (prev_x, prev_y), (cx, cy), (0, 255, 0), 5)
+        if fingers[1] and fingers[2] == False:
+            cv.circle(img, (x1, y1), 15, (255, 0, 255), cv.FILLED)
+            print("Drawing Mode")
 
-        # Update the previous coordinates
-        prev_x, prev_y = cx, cy
-    else:
-        prev_x, prev_y = 0, 0
-
-    # Combine the canvas and the frame
-    combined = cv2.add(frame, canvas)
-
-    # Display the result
-    cv2.imshow('Air Canvas', combined)
-
-    # Break the loop on 'q' key press
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-# Release the webcam and close all OpenCV windows
-cap.release()
-cv2.destroyAllWindows()
+    # Setting up the header image
+    img[0:125, 0:1280] = asset
+    cv.imshow("Image", img)
+    cv.waitKey(1)
