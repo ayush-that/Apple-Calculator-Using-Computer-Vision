@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Hand Tracking and Gemini Output</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #282a36;
+      color: #f8f8f2;
+    }
+
+    .navbar,
+    .footer {
+      background-color: #44475a;
+    }
+
+    .btn-purple {
+      background-color: #bd93f9;
+      color: #282a36;
+    }
+
+    .btn-purple:hover {
+      background-color: #ff79c6;
+      color: #282a36;
+    }
+
+    .card {
+      background-color: #44475a;
+      border: 1px solid #6272a4;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar p-4">
+    <div class="container mx-auto">
+      <h1 class="text-3xl font-bold">Hand Tracking and Gemini Output</h1>
+    </div>
+  </nav>
+
+  <div class="container mx-auto p-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="card p-4">
+        <img src="{{ url_for('video_feed') }}" width="1280" height="720" class="w-full h-auto">
+      </div>
+      <div class="card p-4">
+        <h2 class="text-2xl font-semibold mb-4">Gemini Output</h2>
+        <button onclick="fetchGeminiOutput()" class="btn-purple p-2 rounded">Get Gemini Output</button>
+        <p id="gemini-output" class="mt-4"></p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer p-4 mt-8">
+    <div class="container mx-auto text-center">
+      <!-- Add your footer content here -->
+    </div>
+  </footer>
+
+  <script>
+    function fetchGeminiOutput() {
+      fetch('/gemini')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('gemini-output').innerText = data;
+        });
+    }
+  </script>
+</body>
+
+</html>
