@@ -25,7 +25,7 @@ detector = ht.handDetector(detectionCon=0.85)
 xp, yp = 0, 0
 imgCanvas = np.zeros((720, 1280, 3), np.uint8)
 
-genai.configure(api_key="")
+genai.configure(api_key="YOUR_API_KEY")
 
 def gen_frames():
     global xp, yp, asset, drawColor, imgCanvas
@@ -45,6 +45,10 @@ def gen_frames():
 
                 fingers = detector.fingersUp()
 
+                if fingers[0] and fingers[1] and not fingers[2] and not fingers[3] and not fingers[4]:
+                    # Save imgCanvas when only the thumb and index fingers are up
+                    cv.imwrite("saved_canvas.jpg", imgCanvas)
+
                 if fingers[1] and fingers[2]:
                     xp, yp = 0, 0
                     cv.rectangle(img, (x1, y1 - 25), (x2, y2 + 25), drawColor, cv.FILLED)
@@ -53,15 +57,12 @@ def gen_frames():
                         if 550 < x1 < 750:
                             asset = overlayList[1]
                             drawColor = (255, 0, 0)
-                            cv.imwrite("saved_canvas.jpg", imgCanvas)
                         elif 800 < x1 < 950:
                             asset = overlayList[2]
                             drawColor = (0, 0, 255)
-                            cv.imwrite("saved_canvas.jpg", imgCanvas)
                         elif 1050 < x1 < 1200:
                             asset = overlayList[3]
                             drawColor = (0, 0, 0)
-                            cv.imwrite("saved_canvas.jpg", imgCanvas)
 
                 if fingers[1] and not fingers[2]:
                     cv.circle(img, (x1, y1), 15, drawColor, cv.FILLED)
