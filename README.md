@@ -62,4 +62,4 @@ Now we can run the flask server with ```python app.py``` command.
 
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under The GNU General Public License v3.0 License. See `LICENSE.txt` for more information.
