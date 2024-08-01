@@ -1,0 +1,57 @@
+body {
+    background-color: #282a36;
+    color: #f8f8f2;
+}
+
+.navbar,
+.footer {
+    background-color: #44475a;
+}
+
+.btn-purple {
+    background-color: #bd93f9;
+    color: #282a36;
+}
+
+.btn-purple:hover {
+    background-color: #ff79c6;
+    color: #282a36;
+}
+
+.card {
+    background-color: #44475a;
+    border: 1px solid #6272a4;
+}
+
+.hover-effect {
+    transition: transform 0.3s, color 0.3s;
+}
+
+.hover-effect:hover {
+    transform: scale(1.2);
+    color: #4A90E2;
+    /* Change to your desired hover color */
+}
+
+.animate-bounce {
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-30px);
+    }
+
+    60% {
+        transform: translateY(-15px);
+    }
+}

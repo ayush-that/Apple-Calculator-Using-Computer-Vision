@@ -4,8 +4,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Hand Tracking and Gemini Output</title>
+  <title>Solve Maths with Actions & AI</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/19436447?s=280&v=4" type="image/x-icon">
   <style>
     body {
       background-color: #282a36;
@@ -31,25 +33,115 @@
       background-color: #44475a;
       border: 1px solid #6272a4;
     }
+
+    .hover-effect {
+      transition: transform 0.3s, color 0.3s;
+    }
+
+    .hover-effect:hover {
+      transform: scale(1.2);
+      color: #4A90E2;
+      /* Change to your desired hover color */
+    }
+
+    .animate-bounce {
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      20%,
+      50%,
+      80%,
+      100% {
+        transform: translateY(0);
+      }
+
+      40% {
+        transform: translateY(-30px);
+      }
+
+      60% {
+        transform: translateY(-15px);
+      }
+    }
   </style>
 </head>
 
 <body>
   <nav class="navbar p-4">
-    <div class="container mx-auto">
-      <h1 class="text-3xl font-bold">Hand Tracking and Gemini Output</h1>
+    <div class="container mx-auto flex items-center justify-between">
+      <h1 class="text-2xl font-bold">
+        MathCam <i class="fas fa-square-root-alt"></i> <i class="fas fa-divide"></i>
+      </h1>
+      <p class="text-xl font-semibold">
+        <a href="https://github.com/ayush-that/Apple-Calculator-Using-Computer-Vision" target="_blank">
+          <i class="fas fa-star"></i> Star on GitHub
+        </a>
+      </p>
     </div>
   </nav>
 
-  <div class="container mx-auto p-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <div class="card p-4">
-        <img src="{{ url_for('video_feed') }}" width="1280" height="720" class="w-full h-auto">
+  <section class="instructions p-8">
+    <div class="container mx-auto">
+      <h2 class="text-2xl font-bold mb-4">How to Use</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="card p-4 border rounded shadow">
+          <i class="fas fa-hand-peace text-3xl mb-2"></i>
+          <h3 class="text-xl font-semibold">Selection Mode</h3>
+          <p>Use two fingers to enter selection mode.</p>
+        </div>
+        <div class="card p-4 border rounded shadow">
+          <i class="fas fa-hand-point-up text-3xl mb-2"></i>
+          <h3 class="text-xl font-semibold">Drawing Mode</h3>
+          <p>Use one finger to enter drawing mode.</p>
+        </div>
+        <div class="card p-4 border rounded shadow">
+          <i class="fas fa-calculator text-3xl mb-2"></i>
+          <h3 class="text-xl font-semibold">Solve</h3>
+          <p>Click the solve button to get the maths question solved.</p>
+        </div>
       </div>
-      <div class="card p-4">
-        <h2 class="text-2xl font-semibold mb-4">Gemini Output</h2>
-        <button onclick="fetchGeminiOutput()" class="btn-purple p-2 rounded">Get Gemini Output</button>
-        <p id="gemini-output" class="mt-4"></p>
+    </div>
+  </section>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mx-auto p-8">
+    <div class="card p-4">
+      <img src="{{ url_for('video_feed') }}" width="1280" height="720" class="w-full h-auto">
+    </div>
+    <div class="card p-4">
+      <div class="flex justify-between items-center mb-4 mt-4">
+        <h2 class="text-2xl font-bold">
+          <i class="fas fa-calculator"></i> Solution
+        </h2>
+        <button onclick="fetchGeminiOutput()" class="btn-purple p-2 rounded"><i class="fas fa-magic"></i> Magic Wand
+        </button>
+      </div>
+      <p id="gemini-output" class="mt-4"></p>
+    </div>
+  </div>
+
+  <div class="tech-section p-8">
+    <div class="container mx-auto text-center">
+      <h2 class="text-2xl font-semibold mb-4">Technologies Used</h2>
+      <div class="flex justify-center space-x-8">
+        <div class="tech-icon hover-effect">
+          <i class="fab fa-python text-4xl"></i>
+          <p>Python</p>
+        </div>
+        <div class="tech-icon hover-effect">
+          <i class="fab fa-js-square text-4xl"></i>
+          <p>JavaScript</p>
+        </div>
+        <div class="tech-icon hover-effect">
+          <i class="fab fa-html5 text-4xl"></i>
+          <p>HTML5</p>
+        </div>
+        <div class="tech-icon hover-effect">
+          <i class="fab fa-css3-alt text-4xl"></i>
+          <p>CSS3</p>
+        </div>
       </div>
     </div>
   </div>
@@ -57,6 +149,10 @@
   <footer class="footer p-4 mt-8">
     <div class="container mx-auto text-center">
       <!-- Add your footer content here -->
+
+      <p class="text-xl font-semibold">Made with 💜 by Ayush</p>
+
+
     </div>
   </footer>
 

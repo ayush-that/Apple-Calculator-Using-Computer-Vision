@@ -15,7 +15,7 @@ mylist = os.listdir(folderPath)
 overlayList = [cv.imread(f"{folderPath}/{imPath}") for imPath in mylist]
 
 asset = overlayList[0]
-drawColor = (255, 0, 255)
+drawColor = (0, 0, 255)
 
 cap = cv.VideoCapture(0)
 cap.set(3, 1280)
@@ -50,17 +50,13 @@ def gen_frames():
                     cv.rectangle(img, (x1, y1 - 25), (x2, y2 + 25), drawColor, cv.FILLED)
 
                     if y1 < 125:
-                        if 250 < x1 < 450:
-                            asset = overlayList[0]
-                            drawColor = (255, 0, 255)
-                            cv.imwrite("saved_canvas.jpg", imgCanvas)
-                        elif 550 < x1 < 750:
+                        if 550 < x1 < 750:
                             asset = overlayList[1]
                             drawColor = (255, 0, 0)
                             cv.imwrite("saved_canvas.jpg", imgCanvas)
                         elif 800 < x1 < 950:
                             asset = overlayList[2]
-                            drawColor = (0, 255, 0)
+                            drawColor = (0, 0, 255)
                             cv.imwrite("saved_canvas.jpg", imgCanvas)
                         elif 1050 < x1 < 1200:
                             asset = overlayList[3]
@@ -103,7 +99,7 @@ def gemini():
     sample_file = genai.upload_file(path="saved_canvas.jpg", display_name="Maths Question")
     file = genai.get_file(name=sample_file.name)
     model = genai.GenerativeModel(model_name="gemini-1.5-pro")
-    response = model.generate_content([sample_file, "In the picture you have been provided a mathematics question/equation. Please solve it and write the answer in steps if required."])
+    response = model.generate_content([sample_file, "In the picture you have been provided a mathematics question/equation. Please solve it. First write the final solution then write the explanation. Give plain text response only."])
     return response.text
 
 @app.route('/')
