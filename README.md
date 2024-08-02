@@ -39,27 +39,11 @@ Now we can run the flask server with ```python app.py``` command.
 
 ![image](https://github.com/user-attachments/assets/e93169af-412a-4183-9a18-fd8990e26022)
 
-### Screenshots
+### Demo
 
-<table align="center">
-  <tr>
-    <td align="center">
-      <img src="https://github.com/user-attachments/assets/c6f40aec-604d-4c99-877a-31c68d573637">
-    </td>
-    <td align="center">
-      <img src="https://github.com/user-attachments/assets/c6f40aec-604d-4c99-877a-31c68d573637">
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="https://github.com/user-attachments/assets/c6f40aec-604d-4c99-877a-31c68d573637">
-    </td>
-    <td align="center">
-      <img src="https://github.com/user-attachments/assets/c6f40aec-604d-4c99-877a-31c68d573637">
-    </td>
-  </tr>
-</table>
+[![Watch the video](https://github.com/user-attachments/assets/2733332f-82a2-4d16-9dfa-8e1872bc2362)](https://youtu.be/3xepPO_XXFo)
 
 ### License
 
-Distributed under The GNU General Public License v3.0 License. See `LICENSE.txt` for more information.
+Distributed under The GNU General Public License v3.0 License.<br>
+See `LICENSE.txt` for more information.
