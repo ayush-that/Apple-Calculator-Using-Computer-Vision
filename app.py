@@ -4,10 +4,14 @@ import numpy as np
 import os
 import handTrack as ht
 import google.generativeai as genai
+from dotenv import load_dotenv
+
+load_dotenv()
+print(os.getenv("GOOGLE_API_KEY"))
 
 app = Flask(__name__)
 
-brushThickness = 15
+brushThickness = 10
 eraserThickness = 100
 
 folderPath = "assets"
@@ -25,7 +29,8 @@ detector = ht.handDetector(detectionCon=0.85)
 xp, yp = 0, 0
 imgCanvas = np.zeros((720, 1280, 3), np.uint8)
 
-genai.configure(api_key="YOUR_API_KEY")
+api_key = os.getenv("GOOGLE_API_KEY").strip()
+genai.configure(api_key=api_key)
 
 def gen_frames():
     global xp, yp, asset, drawColor, imgCanvas
@@ -45,13 +50,21 @@ def gen_frames():
 
                 fingers = detector.fingersUp()
 
-                if fingers[0] and fingers[1] and not fingers[2] and not fingers[3] and not fingers[4]:
+                if (
+                    fingers[0]
+                    and fingers[1]
+                    and not fingers[2]
+                    and not fingers[3]
+                    and not fingers[4]
+                ):
                     # Save imgCanvas when only the thumb and index fingers are up
                     cv.imwrite("saved_canvas.jpg", imgCanvas)
 
                 if fingers[1] and fingers[2]:
                     xp, yp = 0, 0
-                    cv.rectangle(img, (x1, y1 - 25), (x2, y2 + 25), drawColor, cv.FILLED)
+                    cv.rectangle(
+                        img, (x1, y1 - 25), (x2, y2 + 25), drawColor, cv.FILLED
+                    )
 
                     if y1 < 125:
                         if 550 < x1 < 750:
@@ -71,10 +84,14 @@ def gen_frames():
 
                     if drawColor == (0, 0, 0):
                         cv.line(img, (xp, yp), (x1, y1), drawColor, eraserThickness)
-                        cv.line(imgCanvas, (xp, yp), (x1, y1), drawColor, eraserThickness)
+                        cv.line(
+                            imgCanvas, (xp, yp), (x1, y1), drawColor, eraserThickness
+                        )
                     else:
                         cv.line(img, (xp, yp), (x1, y1), drawColor, brushThickness)
-                        cv.line(imgCanvas, (xp, yp), (x1, y1), drawColor, brushThickness)
+                        cv.line(
+                            imgCanvas, (xp, yp), (x1, y1), drawColor, brushThickness
+                        )
                     xp, yp = x1, y1
 
             imgGray = cv.cvtColor(imgCanvas, cv.COLOR_BGR2GRAY)
@@ -86,26 +103,36 @@ def gen_frames():
             img[0:125, 0:1280] = asset
             img = cv.addWeighted(img, 0.5, imgCanvas, 0.5, 0)
 
-            ret, buffer = cv.imencode('.jpg', img)
+            ret, buffer = cv.imencode(".jpg", img)
             frame = buffer.tobytes()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+            yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")
 
-@app.route('/video_feed')
+
+@app.route("/video_feed")
 def video_feed():
-    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(gen_frames(), mimetype="multipart/x-mixed-replace; boundary=frame")
 
-@app.route('/gemini')
+
+@app.route("/gemini")
 def gemini():
-    sample_file = genai.upload_file(path="saved_canvas.jpg", display_name="Maths Question")
+    sample_file = genai.upload_file(
+        path="saved_canvas.jpg", display_name="Maths Question"
+    )
     file = genai.get_file(name=sample_file.name)
     model = genai.GenerativeModel(model_name="gemini-1.5-pro")
-    response = model.generate_content([sample_file, "In the picture you have been provided a mathematics question/equation. Please solve it. First write the final solution then write the explanation. Give plain text response only."])
+    response = model.generate_content(
+        [
+            sample_file,
+            "In the picture you have been provided a matrix question/equation. Please solve it and give numerical answer. First write the final solution then write the explanation. Give plain text response only.",
+        ]
+    )
     return response.text
 
-@app.route('/')
-def index():
-    return render_template('index.html')
 
-if __name__ == '__main__':
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+
+if __name__ == "__main__":
     app.run(debug=True)
