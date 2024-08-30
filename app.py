@@ -7,8 +7,6 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 
 load_dotenv()
-print(os.getenv("GOOGLE_API_KEY"))
-
 app = Flask(__name__)
 
 brushThickness = 10
